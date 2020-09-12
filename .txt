@@ -1,0 +1,10 @@
+
+02:16:45 : ST-LINK SN : 53FF74066578555537210367
+02:16:45 : V2J34S7
+02:16:45 : Connected via SWD.
+02:16:45 : SWD Frequency = 4,0 MHz.
+02:16:45 : Connection mode : Connect Under Reset.
+02:16:45 : Debug in Low Power mode enabled.
+02:16:45 : Device ID:0x460 
+02:16:45 : Device flash Size : 128KBytes
+02:16:45 : Device family :STM32G0
