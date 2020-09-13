@@ -76,7 +76,7 @@
   * @{
   */
 
-#include "stm32g0xx.h"
+#include "stm32g070xx.h"
 
 #if !defined  (HSE_VALUE)
 #define HSE_VALUE    (8000000UL)    /*!< Value of the External oscillator in Hz */
@@ -263,7 +263,7 @@ void SystemCoreClockUpdate(void)
       
     case RCC_CFGR_SWS_HSI:  /* HSI used as system clock */
     default:                /* HSI used as system clock */
-      hsidiv = (1UL << ((READ_BIT(RCC->CR, RCC_CR_HSIDIV))>> RCC_CR_HSIDIV_Pos));
+      hsidiv = (1UL << ((RCC->CR & RCC_CR_HSIDIV) >> RCC_CR_HSIDIV_Pos));
       SystemCoreClock = (HSI_VALUE/hsidiv);
       break;
   }

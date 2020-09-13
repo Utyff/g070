@@ -43,14 +43,15 @@ elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "MinSizeRel")
     add_compile_options(-Os)
 else ()
     message(STATUS "Minimal optimization, debug info included")
-    add_compile_options(-Og -g)
+#    add_compile_options(-Og -g)
+    add_compile_options(-O0 -g)
 endif ()
 
 include_directories(Inc Drivers/CMSIS/Device/ST/STM32G0xx/Include Drivers/CMSIS/Include)
 
 add_definitions(-DSTM32G070xx)
 
-file(GLOB_RECURSE SOURCES "startup/*.*" "Drivers/*.*" "Core/*.*")
+file(GLOB_RECURSE SOURCES "startup/*.*" "Drivers/*.*" "src/*.*")
 
 set(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/STM32G070KBTx_FLASH.ld)
 
