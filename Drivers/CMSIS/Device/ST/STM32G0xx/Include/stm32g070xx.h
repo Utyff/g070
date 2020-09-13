@@ -110,7 +110,7 @@ typedef enum
   */
 
 #include "core_cm0plus.h"               /* Cortex-M0+ processor and core peripherals */
-#include "system_stm32g0xx.h"
+//#include "system_stm32g0xx.h"
 #include <stdint.h>
 
 /** @addtogroup Peripheral_registers_structures
