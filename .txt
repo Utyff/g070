@@ -8,3 +8,25 @@
 02:16:45 : Device ID:0x460 
 02:16:45 : Device flash Size : 128KBytes
 02:16:45 : Device family :STM32G0
+
+
+RCC_PLLCFGR
+  PLLR = 001 (/2)
+  PLLREN = 1
+  PLLN = 001 0000  (x8)
+  PLLM = 0 (/1)
+  PLLSRC = 10 (HSI16)
+
+RCC_CR
+  PLLON = 1
+  PLLRDY = 1
+
+RCC->CFGR
+  PPRE = 0
+  HPRE = 0
+  SW = 010 (PLLRCLK)
+
+
+Configurate PLL
+Enable PLL
+Configure SysClk mux

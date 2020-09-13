@@ -1,3 +1,4 @@
+#include <sched.h>
 #include "main.h"
 
 void SystemInit(void);
@@ -14,11 +15,13 @@ uint32_t sysTicks = 0;
 
 uint32_t i = 0;
 
+void initClk();
+
 
 int main(void) {
-    SystemInit();
+
     SystemCoreClockUpdate();
-    SysTick_Config(16000); // 1 sysTick = 1 ms
+    SysTick_Config(64000); // 1 sysTick = 1 ms
     Configure_GPIO_LED();
 
 #pragma ide diagnostic ignored "EndlessLoop"
