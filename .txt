@@ -9,6 +9,7 @@
 02:16:45 : Device flash Size : 128KBytes
 02:16:45 : Device family :STM32G0
 
+==========
 
 RCC_PLLCFGR
   PLLR = 001 (/2)
@@ -30,3 +31,115 @@ RCC->CFGR
 Configurate PLL
 Enable PLL
 Configure SysClk mux
+
+============
+
+0x1FFF7800  AA E1 FF DF 55 1E 00 20  FF 00 00 00 00 FF FF FF
+0x1FFF7810  00 00 00 00 FF FF FF FF  3F 00 00 00 C0 FF FF FF
+0x1FFF7820  3F 00 00 00 C0 FF FF FF  FF 00 00 00 00 FF FF FF
+0x1FFF7830  00 00 00 00 FF FF FF FF  FF FF FF FF FF FF FF FF
+0x1FFF7840  FF FF FF FF FF FF FF FF  FF FF FF FF FF FF FF FF
+0x1FFF7850  FF FF FF FF FF FF FF FF  FF FF FF FF FF FF FF FF
+0x1FFF7860  FF FF FF FF FF FF FF FF  FF FF FF FF FF FF FF FF
+0x1FFF7870  00 00 00 00 FF FF FF FF  FF FF FF FF FF FF FF FF
+
+
+Application log started
+ - J-Flash V6.84a (J-Flash compiled Sep  7 2020 17:26:51)
+ - JLinkARM.dll V6.84a (DLL compiled Sep  7 2020 17:26:08)
+Reading flash device list [D:\winApps\SEGGER\JLink\ETC/JFlash/Flash.csv] ...
+ - List of flash devices read successfully (451 Devices)
+Reading MCU device list ...
+ - List of MCU devices read successfully (7881 Devices)
+Creating new project ...
+ - New project created successfully
+Connecting ...
+ - Connecting via USB to probe/ programmer device 0
+ - Probe/ Programmer firmware: J-Link OB-STM32F072-CortexM compiled Jan  7 2019 14:09:37
+ - Device "STM32G070KB" selected.
+ - Target interface speed: 2000 kHz (Fixed)
+ - VTarget = 3.300V
+ - Found SW-DP with ID 0x0BC11477
+ - Found SW-DP with ID 0x0BC11477
+ - Unknown DP version. Assuming DPv0
+ - Scanning AP map to find all available APs
+ - AP[1]: Stopped AP scan as end of AP map has been reached
+ - AP[0]: AHB-AP (IDR: 0x04770031)
+ - Iterating through AP map to find AHB-AP to use
+ - AP[0]: Core found
+ - AP[0]: AHB-AP ROM base: 0xF0000000
+ - CPUID register: 0x410CC601. Implementer code: 0x41 (ARM)
+ - Found Cortex-M0 r0p1, Little endian.
+ - FPUnit: 4 code (BP) slots and 0 literal slots
+ - CoreSight components:
+ - ROMTbl[0] @ F0000000
+ - ROMTbl[0][0]: E00FF000, CID: B105100D, PID: 000BB4C0 ROM Table
+ - ROMTbl[1] @ E00FF000
+ - ROMTbl[1][0]: E000E000, CID: B105E00D, PID: 000BB008 SCS
+ - ROMTbl[1][1]: E0001000, CID: B105E00D, PID: 000BB00A DWT
+ - ROMTbl[1][2]: E0002000, CID: B105E00D, PID: 000BB00B FPB
+ - Executing init sequence ...
+  - Initialized successfully
+ - Target interface speed: 2000 kHz (Fixed)
+ - CPU clock frequency: 15968 kHz (Auto detected)
+ - Found 1 JTAG device. Core ID: 0x0BC11477 (None)
+ - Connected successfully
+
+================
+
+Application log started
+ - J-Flash V6.72e (J-Flash compiled May 20 2020 12:46:17)
+ - JLinkARM.dll V6.72e (DLL compiled May 20 2020 12:45:53)
+Reading flash device list [D:\winApps\SEGGER\JLink\ETC/JFlash/Flash.csv] ...
+ - List of flash devices read successfully (451 Devices)
+Reading MCU device list ...
+ - List of MCU devices read successfully (7755 Devices)
+Creating new project ...
+ - New project created successfully
+Connecting ...
+ - Connecting via USB to J-Link device 0
+ - J-Link firmware: J-Link OB-STM32F072-CortexM compiled Jan  7 2019 14:09:37
+ - Device "STM32G070KB" selected.
+ - Target interface speed: 2000 kHz (Fixed)
+ - VTarget = 3.300V
+ - Found SW-DP with ID 0x0BC11477
+ - Found SW-DP with ID 0x0BC11477
+ - Unknown DP version. Assuming DPv0
+ - Scanning AP map to find all available APs
+ - AP[1]: Stopped AP scan as end of AP map has been reached
+ - AP[0]: AHB-AP (IDR: 0x04770031)
+ - Iterating through AP map to find AHB-AP to use
+ - AP[0]: Core found
+ - AP[0]: AHB-AP ROM base: 0xF0000000
+ - CPUID register: 0x410CC601. Implementer code: 0x41 (ARM)
+ - Found Cortex-M0 r0p1, Little endian.
+ - FPUnit: 4 code (BP) slots and 0 literal slots
+ - CoreSight components:
+ - ROMTbl[0] @ F0000000
+ - ROMTbl[0][0]: E00FF000, CID: B105100D, PID: 000BB4C0 ROM Table
+ - ROMTbl[1] @ E00FF000
+ - ROMTbl[1][0]: E000E000, CID: B105E00D, PID: 000BB008 SCS
+ - ROMTbl[1][1]: E0001000, CID: B105E00D, PID: 000BB00A DWT
+ - ROMTbl[1][2]: E0002000, CID: B105E00D, PID: 000BB00B FPB
+ - Executing init sequence ...
+  - Initialized successfully
+ - Target interface speed: 2000 kHz (Fixed)
+ - CPU clock frequency: 15971 kHz (Auto detected)
+ - J-Link found 1 JTAG device. Core ID: 0x0BC11477 (None)
+ - Connected successfully
+
+Reading selected sectors ...
+ - 66 of 66 sectors selected, 3 ranges, 0x8000000 - 0x801FFFF, 0x1FFF7800 - 0x1FFF7807, 0x1FFF7818 - 0x1FFF7827
+ - Start of preparing flash programming
+ - End of preparing flash programming
+ - Blank checking 0x08000000 - 0x0801FFFF
+ - Start of restoring
+ - End of restoring
+ - Start of preparing flash programming
+ - End of preparing flash programming
+ - Blank checking 0x1FFF7800 - 0x1FFF7807
+ - Blank checking 0x1FFF7818 - 0x1FFF7827
+ - Start of restoring
+ - End of restoring
+ - Target memory read successfully. (131096 bytes, 3 ranges) - Completed after 1.503 sec
+
