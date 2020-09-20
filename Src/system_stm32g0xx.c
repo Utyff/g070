@@ -178,10 +178,10 @@ void SystemInit(void)
     // set HSI16 as source and SysClk = 64MHz
     // RCC_PLLCFGR - configure PLL
     //  PLLR = 001 (/2)
-    //  PLLN = 001 0000 (x8)
+    //  PLLN = 000 1000 (x8)
     //  PLLM = 0 (/1)
     //  PLLSRC = 10 (HSI16)
-    RCC->PLLCFGR = RCC_PLLCFGR_PLLSRC_1 | RCC_PLLCFGR_PLLN_4 | RCC_PLLCFGR_PLLR_0 | RCC_PLLCFGR_PLLREN;
+    RCC->PLLCFGR = RCC_PLLCFGR_PLLSRC_1 | RCC_PLLCFGR_PLLN_3 | RCC_PLLCFGR_PLLR_0 | RCC_PLLCFGR_PLLREN;
 
     // enable PLL and wait
     RCC->CR |= RCC_CR_PLLON;
