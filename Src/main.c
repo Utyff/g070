@@ -1,5 +1,6 @@
 #include <sched.h>
 #include "main.h"
+#include "usart.h"
 
 void SystemInit(void);
 
@@ -24,11 +25,16 @@ int main(void) {
     SystemCoreClockUpdate();
     SysTick_Config(64000); // 1 sysTick = 1 ms
     Configure_GPIO_LED();
+    Configure_USART();
 
 #pragma ide diagnostic ignored "EndlessLoop"
     while (1) {
         i++;
         GPIOB->ODR ^= GPIO_ODR_OD8;
+
+        printS("\n\rsystick: ");
+        print16(sysTicks);
+
         Delay(300);
     }
 }
@@ -87,6 +93,47 @@ void Configure_GPIO_LED(void) {
 void Delay(uint32_t delay) {
     uint32_t start = sysTicks;
     while (sysTicks - start < delay);
+}
+
+void _strcpy(uint8_t *dst, const uint8_t *src) {
+    int i = 0;
+    do {
+        dst[i] = src[i];
+    } while (src[i++] != 0);
+}
+
+void _memcpy(uint8_t *dst, const uint8_t *src, uint16_t size) {
+    for (int i = 0; i < size; i++) {
+        dst[i] = src[i];
+    }
+}
+
+void _memset(uint8_t *dst, const uint8_t src, uint16_t size) {
+    for (int i = 0; i < size; i++) {
+        dst[i] = src;
+    }
+}
+
+void _itoa(uint16_t i, char *p) {
+//    char const digit[] = "0123456789";
+    if (i < 0) {
+        *p++ = '-';
+        i *= -1;
+    }
+
+    int shifter = i;
+    // Move to where representation ends
+    do {
+        ++p;
+        shifter = shifter / 10;
+    } while (shifter);
+    *p = '\0';
+
+    // Move back, inserting digits as u go
+    do {
+        *--p = (char) ('0' + i % 10);
+        i = i / (uint16_t) 10;
+    } while (i);
 }
 
 /**
