@@ -77,6 +77,7 @@
   */
 
 #include "stm32g070xx.h"
+#include "main.h"
 
 #if !defined  (HSE_VALUE)
 #define HSE_VALUE    (8000000UL)    /*!< Value of the External oscillator in Hz */
@@ -174,6 +175,10 @@ void SystemInit(void)
 #else
   SCB->VTOR = FLASH_BASE | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal FLASH */
 #endif
+
+    SET_BIT(FLASH->ACR, FLASH_ACR_PRFTEN);
+    SET_BIT(RCC->APBENR2, RCC_APBENR2_SYSCFGEN);
+    SET_BIT(RCC->APBENR1, RCC_APBENR1_PWREN);
 
     // set HSI16 as source and SysClk = 64MHz
     // RCC_PLLCFGR - configure PLL
