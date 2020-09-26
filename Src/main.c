@@ -22,7 +22,7 @@ int main(void) {
 
     initClock();
     SystemCoreClockUpdate();
-    SysTick_Config(16000); // 1 sysTick = 1 ms
+    SysTick_Config(64000); // 1 sysTick = 1 ms
     Configure_GPIO_LED();
 
 #pragma ide diagnostic ignored "EndlessLoop"
@@ -70,15 +70,15 @@ void initClock() {
     //  PLLN = 000 1000 (x8)
     //  PLLM = 0 (/1)
     //  PLLSRC = 10 (HSI16)
-    RCC->PLLCFGR = RCC_PLLCFGR_PLLSRC_1 | RCC_PLLCFGR_PLLN_3 | RCC_PLLCFGR_PLLR_0;
+    // Enable PLLR Clock output.
+    RCC->PLLCFGR = RCC_PLLCFGR_PLLSRC_1 | RCC_PLLCFGR_PLLN_3 | RCC_PLLCFGR_PLLR_0 |  RCC_PLLCFGR_PLLREN;
 
     // enable PLL
     RCC->CR |= RCC_CR_PLLON;
-    // Enable PLLR Clock output.
-    RCC->PLLCFGR = RCC_PLLCFGR_PLLREN;
     // wait PLL ready
     while (!(RCC->CR & RCC_CR_PLLRDY));
 
+    MODIFY_REG(FLASH->ACR, FLASH_ACR_LATENCY, (FLASH_ACR_LATENCY_1));
 
     // set PLL as SysClk source
     // RCC->CFGR
