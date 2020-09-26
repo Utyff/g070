@@ -15,11 +15,12 @@ uint32_t sysTicks = 0;
 
 uint32_t i = 0;
 
-void initClk();
+void initClock();
 
 
 int main(void) {
 
+    initClock();
     SystemCoreClockUpdate();
     SysTick_Config(64000); // 1 sysTick = 1 ms
     Configure_GPIO_LED();
@@ -32,6 +33,32 @@ int main(void) {
     }
 }
 
+
+void initClock() {
+    SET_BIT(FLASH->ACR, FLASH_ACR_PRFTEN);
+    SET_BIT(RCC->APBENR2, RCC_APBENR2_SYSCFGEN);
+    SET_BIT(RCC->APBENR1, RCC_APBENR1_PWREN);
+
+    // set HSI16 as source and SysClk = 64MHz
+    // RCC_PLLCFGR - configure PLL
+    //  PLLR = 001 (/2)
+    //  PLLN = 000 1000 (x8)
+    //  PLLM = 0 (/1)
+    //  PLLSRC = 10 (HSI16)
+    RCC->PLLCFGR = RCC_PLLCFGR_PLLSRC_1 | RCC_PLLCFGR_PLLN_3 | RCC_PLLCFGR_PLLR_0 | RCC_PLLCFGR_PLLREN;
+
+    // enable PLL and wait
+    RCC->CR |= RCC_CR_PLLON;
+    while (!(RCC->CR & RCC_CR_PLLRDY));
+
+    // set PLL as SysClk source
+    // RCC->CFGR
+    //  PPRE = 0
+    //  HPRE = 0
+    //  SW = 010 (PLLRCLK)
+    RCC->CFGR = RCC_CFGR_SW_1;
+    while ((RCC->CFGR & RCC_CFGR_SWS_Msk) != RCC_CFGR_SWS_PLL);
+}
 /**
   * @brief  This function :
              - Enables LEDs GPIO clock
