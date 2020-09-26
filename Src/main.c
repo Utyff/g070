@@ -35,34 +35,9 @@ int main(void) {
 
 
 void initClock() {
-// HAL_Init(void)
     SET_BIT(FLASH->ACR, FLASH_ACR_PRFTEN);
-
-    // HAL_InitTick();
-
-    // HAL_MspInit(void)
-
-    do { \
-        __IO uint32_t tmpreg; \
-        SET_BIT(RCC->APBENR2, RCC_APBENR2_SYSCFGEN); \
-        /* Delay after an RCC peripheral clock enabling */ \
-        tmpreg = READ_BIT(RCC->APBENR2, RCC_APBENR2_SYSCFGEN); \
-        UNUSED(tmpreg); \
-      } while(0U);
-
-    do { \
-        __IO uint32_t tmpreg; \
-        SET_BIT(RCC->APBENR1, RCC_APBENR1_PWREN); \
-        /* Delay after an RCC peripheral clock enabling */ \
-        tmpreg = READ_BIT(RCC->APBENR1, RCC_APBENR1_PWREN); \
-        UNUSED(tmpreg); \
-      } while(0U);
-
-
-        // HAL_SYSCFG_StrobeDBattpinsConfig(uint32_t ConfigDeadBattery)
-#define ConfigDeadBattery SYSCFG_CFGR1_UCPD1_STROBE | SYSCFG_CFGR1_UCPD2_STROBE
-    MODIFY_REG(SYSCFG->CFGR1, (SYSCFG_CFGR1_UCPD1_STROBE | SYSCFG_CFGR1_UCPD2_STROBE), ConfigDeadBattery);
-
+    SET_BIT(RCC->APBENR2, RCC_APBENR2_SYSCFGEN);
+    SET_BIT(RCC->APBENR1, RCC_APBENR1_PWREN);
 
     // set HSI16 as source and SysClk = 64MHz
     // RCC_PLLCFGR - configure PLL
@@ -88,6 +63,7 @@ void initClock() {
     RCC->CFGR = RCC_CFGR_SW_1;
     while ((RCC->CFGR & RCC_CFGR_SWS_Msk) != RCC_CFGR_SWS_PLL);
 }
+
 /**
   * @brief  This function :
              - Enables LEDs GPIO clock
