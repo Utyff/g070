@@ -38,6 +38,7 @@ typedef enum
     ERROR = !SUCCESS
 } ErrorStatus;
 
+#define UNUSED(X) (void)X      /* To avoid gcc/g++ warnings */
 
 #define SET_BIT(REG, BIT)     ((REG) |= (BIT))
 

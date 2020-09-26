@@ -22,7 +22,7 @@ int main(void) {
 
     initClock();
     SystemCoreClockUpdate();
-    SysTick_Config(64000); // 1 sysTick = 1 ms
+    SysTick_Config(16000); // 1 sysTick = 1 ms
     Configure_GPIO_LED();
 
 #pragma ide diagnostic ignored "EndlessLoop"
@@ -35,9 +35,34 @@ int main(void) {
 
 
 void initClock() {
+// HAL_Init(void)
     SET_BIT(FLASH->ACR, FLASH_ACR_PRFTEN);
-    SET_BIT(RCC->APBENR2, RCC_APBENR2_SYSCFGEN);
-    SET_BIT(RCC->APBENR1, RCC_APBENR1_PWREN);
+
+    // HAL_InitTick();
+
+    // HAL_MspInit(void)
+
+    do { \
+        __IO uint32_t tmpreg; \
+        SET_BIT(RCC->APBENR2, RCC_APBENR2_SYSCFGEN); \
+        /* Delay after an RCC peripheral clock enabling */ \
+        tmpreg = READ_BIT(RCC->APBENR2, RCC_APBENR2_SYSCFGEN); \
+        UNUSED(tmpreg); \
+      } while(0U);
+
+    do { \
+        __IO uint32_t tmpreg; \
+        SET_BIT(RCC->APBENR1, RCC_APBENR1_PWREN); \
+        /* Delay after an RCC peripheral clock enabling */ \
+        tmpreg = READ_BIT(RCC->APBENR1, RCC_APBENR1_PWREN); \
+        UNUSED(tmpreg); \
+      } while(0U);
+
+
+        // HAL_SYSCFG_StrobeDBattpinsConfig(uint32_t ConfigDeadBattery)
+#define ConfigDeadBattery SYSCFG_CFGR1_UCPD1_STROBE | SYSCFG_CFGR1_UCPD2_STROBE
+    MODIFY_REG(SYSCFG->CFGR1, (SYSCFG_CFGR1_UCPD1_STROBE | SYSCFG_CFGR1_UCPD2_STROBE), ConfigDeadBattery);
+
 
     // set HSI16 as source and SysClk = 64MHz
     // RCC_PLLCFGR - configure PLL
@@ -45,11 +70,15 @@ void initClock() {
     //  PLLN = 000 1000 (x8)
     //  PLLM = 0 (/1)
     //  PLLSRC = 10 (HSI16)
-    RCC->PLLCFGR = RCC_PLLCFGR_PLLSRC_1 | RCC_PLLCFGR_PLLN_3 | RCC_PLLCFGR_PLLR_0 | RCC_PLLCFGR_PLLREN;
+    RCC->PLLCFGR = RCC_PLLCFGR_PLLSRC_1 | RCC_PLLCFGR_PLLN_3 | RCC_PLLCFGR_PLLR_0;
 
-    // enable PLL and wait
+    // enable PLL
     RCC->CR |= RCC_CR_PLLON;
+    // Enable PLLR Clock output.
+    RCC->PLLCFGR = RCC_PLLCFGR_PLLREN;
+    // wait PLL ready
     while (!(RCC->CR & RCC_CR_PLLRDY));
+
 
     // set PLL as SysClk source
     // RCC->CFGR
