@@ -53,7 +53,7 @@ void printS(const char *str) {
 
     _strcpy(string2send2, (uint8_t *) str);
     // start USART transmission. Will initiate TC if TXE
-    USART2->TDR = string2send2[send2];
+    USART2->TDR = string2send2[0];
     send2 = 1;
 }
 
@@ -64,7 +64,7 @@ void uart1Send(const uint8_t *in, uint8_t size) {
     uart1Size = size;
     _memcpy(uart1TX, in, size);
     // start USART transmission. Will initiate TC if TXE
-    USART1->TDR = uart1TX[uart1CountTX];
+    USART1->TDR = uart1TX[0];
     uart1CountTX = 1;
 }
 
@@ -77,6 +77,7 @@ void uart1Send(const uint8_t *in, uint8_t size) {
 void Configure_GPIO_USART(void) {
     // Enable the peripheral clock of GPIOA
     RCC->IOPENR |= RCC_IOPENR_GPIOAEN;
+    RCC->IOPENR |= RCC_IOPENR_GPIOBEN;
 
     // GPIO configuration for USART1 signals
     // (1) Select AF mode (01) on PA9 and PA10
