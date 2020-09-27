@@ -31,10 +31,13 @@ int main(void) {
     while (1) {
         i++;
         GPIOB->ODR ^= GPIO_ODR_OD8;
+        GPIOB->ODR ^= GPIO_ODR_OD5;
 
         printS("\n\rsystick: ");
         print16(sysTicks);
 
+        Delay(300);
+        GPIOB->ODR ^= GPIO_ODR_OD5;
         Delay(300);
     }
 }
@@ -52,7 +55,7 @@ void initClock() {
     //  PLLM = 0 (/1)
     //  PLLSRC = 10 (HSI16)
     // Enable PLLR Clock output.
-    RCC->PLLCFGR = RCC_PLLCFGR_PLLSRC_1 | RCC_PLLCFGR_PLLN_3 | RCC_PLLCFGR_PLLR_0 |  RCC_PLLCFGR_PLLREN;
+    RCC->PLLCFGR = RCC_PLLCFGR_PLLSRC_1 | RCC_PLLCFGR_PLLN_3 | RCC_PLLCFGR_PLLR_0 | RCC_PLLCFGR_PLLREN;
 
     // enable PLL
     RCC->CR |= RCC_CR_PLLON;
@@ -78,11 +81,10 @@ void initClock() {
   */
 void Configure_GPIO_LED(void) {
     // Enable the peripheral clock of GPIOA
-//    RCC->IOPENR |= RCC_IOPENR_GPIOAEN;
     RCC->IOPENR |= RCC_IOPENR_GPIOBEN;
 
     // Select output mode (01) on PA4 and PB8
-//    GPIOA->MODER = (GPIOA->MODER & ~(GPIO_MODER_MODER4)) | (GPIO_MODER_MODER4_0);
+    GPIOB->MODER = (GPIOB->MODER & ~(GPIO_MODER_MODE5)) | (GPIO_MODER_MODE5_0);
     GPIOB->MODER = (GPIOB->MODER & ~(GPIO_MODER_MODE8)) | (GPIO_MODER_MODE8_0);
 }
 

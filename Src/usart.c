@@ -63,8 +63,7 @@ void uart1Send(const uint8_t *in, uint8_t size) {
   */
 void Configure_GPIO_USART(void) {
     // Enable the peripheral clock of GPIOA
-//    RCC->AHBENR |= RCC_AHBENR_GPIOAEN;
-    RCC->IOPENR |= RCC_IOPENR_GPIOBEN;
+    RCC->IOPENR |= RCC_IOPENR_GPIOAEN;
 
     // GPIO configuration for USART1 signals
     // (1) Select AF mode (01) on PA9 and PA10
@@ -81,6 +80,22 @@ void Configure_GPIO_USART(void) {
                    | (GPIO_MODER_MODE2_1 | GPIO_MODER_MODE3_1); // (1)
     GPIOA->AFR[0] = (GPIOA->AFR[0] & ~(GPIO_AFRL_AFSEL2 | GPIO_AFRL_AFSEL3))
                     | GPIO_AFRL_AFSEL2_0 | GPIO_AFRL_AFSEL3_0; // (2)
+
+    // GPIO configuration for USART3 signals
+    // (1) Select AF mode (01) on PA5 and PB9
+    // (2) AF1 for USART3 signals
+    GPIOA->MODER = (GPIOA->MODER & ~(GPIO_MODER_MODE5)) | (GPIO_MODER_MODE5_1); // (1)
+    GPIOA->AFR[0] = (GPIOA->AFR[0] & ~(GPIO_AFRL_AFSEL5)) | GPIO_AFRL_AFSEL3_0; // (2)
+    GPIOB->MODER = (GPIOB->MODER & ~(GPIO_MODER_MODE9)) | (GPIO_MODER_MODE9_1); // (1)
+    GPIOB->AFR[1] = (GPIOB->AFR[1] & ~(GPIO_AFRH_AFSEL9)) | GPIO_AFRH_AFSEL9_0; // (2)
+
+    // GPIO configuration for USART4 signals
+    // (1) Select AF mode (01) on PA0 and PA1
+    // (2) AF1 for USART4 signals
+    GPIOA->MODER = (GPIOA->MODER & ~(GPIO_MODER_MODE0 | GPIO_MODER_MODE1))
+                   | (GPIO_MODER_MODE0_1 | GPIO_MODER_MODE1_1); // (1)
+    GPIOA->AFR[0] = (GPIOA->AFR[0] & ~(GPIO_AFRL_AFSEL0 | GPIO_AFRL_AFSEL1))
+                    | GPIO_AFRL_AFSEL0_0 | GPIO_AFRL_AFSEL1_0; // (2)
 }
 
 /**
@@ -150,6 +165,70 @@ void Configure_USART2(void) {
     NVIC_EnableIRQ(USART2_IRQn); // (4)
 }
 
+void Configure_USART3(void) {
+    // Enable the peripheral clock USART3
+    RCC->APBENR1 |= RCC_APBENR1_USART3EN;
+
+    // Configure USART3
+    // (1) oversampling by 16, 115200 baud
+    // (2) 8 data bit, 1 start bit, 1 stop bit, no parity
+
+    // for system clock (SYSCLK) selected as USART3 clock
+//    RCC->CFGR3 &= ~RCC_CFGR3_USART3SW;
+//    RCC->CFGR3 |= RCC_CFGR3_USART3SW_0;
+//    USART3->BRR = (SYSCLK + BAUDRATE1 / 2) / BAUDRATE1; // скорость usart
+    // for APB clock selected as USART3 clock
+    USART3->BRR = APBCLK / BAUDRATE1;
+
+    USART3->CR1 = USART_CR1_RE | USART_CR1_TE | USART_CR1_UE;
+    USART3->CR2 = USART_CR1_RXNEIE_RXFNEIE;
+
+    // polling idle frame Transmission
+    while ((USART3->ISR & USART_ISR_TC) != USART_ISR_TC) {
+        // add time out here for a robust application
+    }
+    USART3->ICR |= USART_ICR_TCCF; // clear TC flag
+    USART3->CR1 |= USART_CR1_TCIE; // enable TC interrupt
+
+    // Configure IT
+    // (3) Set priority for USART3_4_IRQn
+    // (4) Enable USART3_4_IRQn
+    NVIC_SetPriority(USART3_4_IRQn, 0); // (3)
+    NVIC_EnableIRQ(USART3_4_IRQn); // (4)
+}
+
+void Configure_USART4(void) {
+    // Enable the peripheral clock USART4
+    RCC->APBENR1 |= RCC_APBENR1_USART4EN;
+
+    // Configure USART4
+    // (1) oversampling by 16, 115200 baud
+    // (2) 8 data bit, 1 start bit, 1 stop bit, no parity
+
+    // for system clock (SYSCLK) selected as USART4 clock
+//    RCC->CFGR3 &= ~RCC_CFGR3_USART4SW;
+//    RCC->CFGR3 |= RCC_CFGR3_USART4SW_0;
+//    USART4->BRR = (SYSCLK + BAUDRATE1 / 2) / BAUDRATE1; // скорость usart
+    // for APB clock selected as USART4 clock
+    USART4->BRR = APBCLK / BAUDRATE1;
+
+    USART4->CR1 = USART_CR1_RE | USART_CR1_TE | USART_CR1_UE;
+    USART4->CR2 = USART_CR1_RXNEIE_RXFNEIE;
+
+    // polling idle frame Transmission
+    while ((USART4->ISR & USART_ISR_TC) != USART_ISR_TC) {
+        // add time out here for a robust application
+    }
+    USART4->ICR |= USART_ICR_TCCF; // clear TC flag
+    USART4->CR1 |= USART_CR1_TCIE; // enable TC interrupt
+
+    // Configure IT
+    // (3) Set priority for USART3_4_IRQn
+    // (4) Enable USART3_4_IRQn
+//    NVIC_SetPriority(USART3_4_IRQn, 0); // (3)
+//    NVIC_EnableIRQ(USART3_4_IRQn); // (4)
+}
+
 /**
   * @brief  This function handles USART1 interrupt request.
   */
@@ -186,6 +265,45 @@ void USART2_IRQHandler(void) {
     }
     if ((USART2->ISR & USART_ISR_RXNE_RXFNE) == USART_ISR_RXNE_RXFNE) {
         uart2RX = (uint8_t) (USART2->RDR); // Receive data, clear flag
+    }
+}
+
+/**
+  * @brief  This function handles USART3 interrupt request.
+  */
+void USART3_4_IRQHandler(void) {
+    // USART3 handle
+    if ((USART3->ISR & USART_ISR_TC) == USART_ISR_TC) {
+        if (uart1CountTX == uart1Size) {
+            uart1CountTX = 0;
+            USART3->ICR |= USART_ICR_TCCF; // Clear transfer complete flag
+        } else {
+            // clear transfer complete flag and fill TDR with a new char
+            USART3->TDR = uart1TX[uart1CountTX++];
+        }
+    }
+    if ((USART3->ISR & USART_ISR_RXNE_RXFNE) == USART_ISR_RXNE_RXFNE) {
+        uart1RX[uart1CountRX] = (uint8_t) (USART3->RDR); // Receive data, clear flag
+        if (++uart1CountRX >= UART1_RX_SIZE) {
+            uart1CountRX = 0;
+        }
+    }
+
+    // USART4 handle
+    if ((USART4->ISR & USART_ISR_TC) == USART_ISR_TC) {
+        if (uart1CountTX == uart1Size) {
+            uart1CountTX = 0;
+            USART4->ICR |= USART_ICR_TCCF; // Clear transfer complete flag
+        } else {
+            // clear transfer complete flag and fill TDR with a new char
+            USART4->TDR = uart1TX[uart1CountTX++];
+        }
+    }
+    if ((USART4->ISR & USART_ISR_RXNE_RXFNE) == USART_ISR_RXNE_RXFNE) {
+        uart1RX[uart1CountRX] = (uint8_t) (USART4->RDR); // Receive data, clear flag
+        if (++uart1CountRX >= UART1_RX_SIZE) {
+            uart1CountRX = 0;
+        }
     }
 }
 
