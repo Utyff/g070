@@ -7,13 +7,13 @@
 
 #include "stm32g070xx.h"
 
-#define UART1_RX_SIZE 256
+#define UART_BUF_SIZE 64
 
 extern uint16_t uart1CountTX;
 extern uint16_t uart1Size;
-extern uint8_t uart1TX[32];
+extern uint8_t uart1TX[UART_BUF_SIZE];
 extern uint16_t uart1CountRX;
-extern uint8_t uart1RX[UART1_RX_SIZE];
+extern uint8_t uart1RX[UART_BUF_SIZE];
 extern uint8_t uart2RX;
 
 void uart1Send(const uint8_t *in, uint8_t size);

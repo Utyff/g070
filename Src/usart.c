@@ -3,12 +3,25 @@
 
 uint16_t uart1CountTX = 0;
 uint16_t uart1Size = 0;
-uint8_t uart1TX[32];
+uint8_t uart1TX[UART_BUF_SIZE];
 uint16_t uart1CountRX = 0;
-uint8_t uart1RX[UART1_RX_SIZE];
+uint8_t uart1RX[UART_BUF_SIZE];
+
 uint16_t send2 = 0;
-uint8_t string2send2[32] = "STm\n";
+uint8_t string2send2[UART_BUF_SIZE] = "STm\n";
 uint8_t uart2RX = 0;
+
+uint16_t uart3CountTX = 0;
+uint16_t uart3Size = 0;
+uint8_t uart3TX[UART_BUF_SIZE];
+uint16_t uart3CountRX = 0;
+uint8_t uart3RX[UART_BUF_SIZE];
+
+uint16_t uart4CountTX = 0;
+uint16_t uart4Size = 0;
+uint8_t uart4TX[UART_BUF_SIZE];
+uint16_t uart4CountRX = 0;
+uint8_t uart4RX[UART_BUF_SIZE];
 
 #define hex2char(hex) (uint8_t)((hex)<=9u ? (hex) + '0' : (hex) + 'a' - 10u)
 
@@ -244,7 +257,7 @@ void USART1_IRQHandler(void) {
     }
     if ((USART1->ISR & USART_ISR_RXNE_RXFNE) == USART_ISR_RXNE_RXFNE) {
         uart1RX[uart1CountRX] = (uint8_t) (USART1->RDR); // Receive data, clear flag
-        if (++uart1CountRX >= UART1_RX_SIZE) {
+        if (++uart1CountRX >= UART_BUF_SIZE) {
             uart1CountRX = 0;
         }
     }
@@ -274,35 +287,35 @@ void USART2_IRQHandler(void) {
 void USART3_4_IRQHandler(void) {
     // USART3 handle
     if ((USART3->ISR & USART_ISR_TC) == USART_ISR_TC) {
-        if (uart1CountTX == uart1Size) {
-            uart1CountTX = 0;
+        if (uart3CountTX == uart3Size) {
+            uart3CountTX = 0;
             USART3->ICR |= USART_ICR_TCCF; // Clear transfer complete flag
         } else {
             // clear transfer complete flag and fill TDR with a new char
-            USART3->TDR = uart1TX[uart1CountTX++];
+            USART3->TDR = uart3TX[uart3CountTX++];
         }
     }
     if ((USART3->ISR & USART_ISR_RXNE_RXFNE) == USART_ISR_RXNE_RXFNE) {
-        uart1RX[uart1CountRX] = (uint8_t) (USART3->RDR); // Receive data, clear flag
-        if (++uart1CountRX >= UART1_RX_SIZE) {
-            uart1CountRX = 0;
+        uart3RX[uart3CountRX] = (uint8_t) (USART3->RDR); // Receive data, clear flag
+        if (++uart3CountRX >= UART_BUF_SIZE) {
+            uart3CountRX = 0;
         }
     }
 
     // USART4 handle
     if ((USART4->ISR & USART_ISR_TC) == USART_ISR_TC) {
-        if (uart1CountTX == uart1Size) {
-            uart1CountTX = 0;
+        if (uart4CountTX == uart4Size) {
+            uart4CountTX = 0;
             USART4->ICR |= USART_ICR_TCCF; // Clear transfer complete flag
         } else {
             // clear transfer complete flag and fill TDR with a new char
-            USART4->TDR = uart1TX[uart1CountTX++];
+            USART4->TDR = uart4TX[uart4CountTX++];
         }
     }
     if ((USART4->ISR & USART_ISR_RXNE_RXFNE) == USART_ISR_RXNE_RXFNE) {
-        uart1RX[uart1CountRX] = (uint8_t) (USART4->RDR); // Receive data, clear flag
-        if (++uart1CountRX >= UART1_RX_SIZE) {
-            uart1CountRX = 0;
+        uart4RX[uart4CountRX] = (uint8_t) (USART4->RDR); // Receive data, clear flag
+        if (++uart4CountRX >= UART_BUF_SIZE) {
+            uart4CountRX = 0;
         }
     }
 }
@@ -311,4 +324,6 @@ void Configure_USART(void) {
     Configure_GPIO_USART();
     Configure_USART1();
     Configure_USART2();
+    Configure_USART3();
+    Configure_USART4();
 }
