@@ -47,11 +47,11 @@ else ()
     add_compile_options(-O0 -g)
 endif ()
 
-include_directories(Inc Drivers/CMSIS/Device/ST/STM32G0xx/Include Drivers/CMSIS/Include)
+include_directories(Inc Drivers/CMSIS/Device/ST/STM32G0xx/Include Drivers/CMSIS/Include hx711)
 
 add_definitions(-DSTM32G070xx)
 
-file(GLOB_RECURSE SOURCES "startup/*.*" "Drivers/*.*" "src/*.*")
+file(GLOB_RECURSE SOURCES "startup/*.*" "Drivers/*.*" "src/*.*" "hx711/*.*")
 
 set(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/STM32G070KBTx_FLASH.ld)
 

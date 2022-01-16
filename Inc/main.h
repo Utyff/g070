@@ -56,6 +56,9 @@ typedef enum
 
 /*#define POSITION_VAL(VAL)     (__CLZ(__RBIT(VAL)))*/
 
+extern uint32_t sysTicks;
+
+void Delay(uint32_t delay);
 void _strcpy(uint8_t *dst, const uint8_t *src);
 void _memcpy(uint8_t *dst, const uint8_t *src, uint16_t size);
 void _memset(uint8_t *dst, const uint8_t src, uint16_t size);

@@ -1,6 +1,7 @@
 #include <sched.h>
 #include "main.h"
 #include "usart.h"
+#include "hx711.h"
 
 void SystemInit(void);
 
@@ -16,6 +17,9 @@ uint32_t sysTicks = 0;
 
 uint32_t i = 0;
 
+hx711_t loadcell;
+float weight;
+
 void initClock();
 
 
@@ -26,6 +30,10 @@ int main(void) {
     SysTick_Config(64000); // 1 sysTick = 1 ms
     Configure_GPIO_LED();
     Configure_USART();
+
+    hx711_init(&loadcell);
+    hx711_coef_set(&loadcell, 1); // read after calibration
+//    hx711_tare(&loadcell, 10);
 
 #pragma ide diagnostic ignored "EndlessLoop"
     while (1) {
@@ -39,6 +47,8 @@ int main(void) {
         Delay(300);
         GPIOB->ODR ^= GPIO_ODR_OD5;
         Delay(300);
+
+        weight = hx711_weight(&loadcell, 3);
     }
 }
 
@@ -76,14 +86,14 @@ void initClock() {
 /**
   * @brief  This function :
              - Enables LEDs GPIO clock
-             - Configures the Green LED pin on GPIO PA4
+             - Configures the Green LED pin on GPIO PB5
              - Configures the orange LED pin on GPIO PB8
   */
 void Configure_GPIO_LED(void) {
-    // Enable the peripheral clock of GPIOA
+    // Enable the peripheral clock of GPIOB
     RCC->IOPENR |= RCC_IOPENR_GPIOBEN;
 
-    // Select output mode (01) on PA4 and PB8
+    // Select output mode (01) on PB5 and PB8
     GPIOB->MODER = (GPIOB->MODER & ~(GPIO_MODER_MODE5)) | (GPIO_MODER_MODE5_0);
     GPIOB->MODER = (GPIOB->MODER & ~(GPIO_MODER_MODE8)) | (GPIO_MODER_MODE8_0);
 }
